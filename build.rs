@@ -3,11 +3,48 @@ extern crate bindgen;
 use std::env;
 use std::path::PathBuf;
 
-fn main() {
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn print_core() {
     println!(
         "cargo:rustc-link-search=native={}/Core/lib/macos/arm64",
         env::var("CARGO_MANIFEST_DIR").unwrap()
     );
+}
+
+#[cfg(all(target_os = "macos", target_arch = "x86_64"))]
+fn print_core() {
+    println!(
+        "cargo:rustc-link-search=native={}/Core/lib/macos/x86_64",
+        env::var("CARGO_MANIFEST_DIR").unwrap()
+    );
+}
+
+#[cfg(all(target_os = "linux", target_arch = "x86_64"))]
+fn print_core() {
+    println!(
+        "cargo:rustc-link-search=native={}/Core/lib/linux/x86_64",
+        env::var("CARGO_MANIFEST_DIR").unwrap()
+    );
+}
+
+#[cfg(all(target_os = "windows", target_arch = "x86"))]
+fn print_core() {
+    println!(
+        "cargo:rustc-link-search=native={}/Core/lib/windows/x86",
+        env::var("CARGO_MANIFEST_DIR").unwrap()
+    );
+}
+
+#[cfg(all(target_os = "windows", target_arch = "x86_64"))]
+fn print_core() {
+    println!(
+        "cargo:rustc-link-search=native={}/Core/lib/windows/x86_64",
+        env::var("CARGO_MANIFEST_DIR").unwrap()
+    );
+}
+
+fn main() {
+    print_core();
     println!("cargo:rustc-link-lib=static=Live2DCubismCore");
 
     let bindings = bindgen::Builder::default()
